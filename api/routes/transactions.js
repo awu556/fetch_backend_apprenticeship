@@ -5,20 +5,15 @@ let data = [{ "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:
 { "payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z"},
 { "payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }]
 
-let payerBalances = [
-    {
-    "payer": "DANNON",
-    "points": 1100
-    },
-    {
-    "payer": "UNILEVER",
-    "points": 200
-    },
-    {
-    "payer": "MILLER COORS",
-    "points": 10000
+let payerBalances = []
+
+data.forEach(obj => {
+    if(!payerBalances.some(a => a.payer === obj['payer'])){
+      payerBalances.push({"payer": obj.payer, "points": obj.points})
+    } else {
+      payerBalances.filter(a => a.payer === obj["payer"])[0]['points'] += obj["points"]
     }
-]
+})
 
 router.get('/', async (req, res, next) => {
     try{
@@ -33,14 +28,6 @@ router.get('/', async (req, res, next) => {
 
 router.get('/payerBalances', async (req, res, next) => {
     try {
-        data.forEach(obj => {
-            if(!payerBalances.some(a => a.payer === obj['payer'])){
-              payerBalances.push({"payer": obj.payer, "points": obj.points})
-            } else {
-              payerBalances.filter(a => a.payer === obj["payer"])[0]['points'] += obj["points"]
-            }
-        })
-
         res.json(payerBalances)
     } catch (error) {
         next(error)
