@@ -39,8 +39,11 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
     payerBalances.forEach(obj => {
       let match = spentPayerBalance.filter(a => a.payer === obj.payer)
       match = match.length ? match[0]['points'] : 0
-      if(match)
-      obj.points = match + obj.points
+      if(match){
+        obj.points = match + obj.points
+      } else if (obj.points < 0) {
+        obj.points = 0
+      }
     })
     return updatedHistoryData
 }
