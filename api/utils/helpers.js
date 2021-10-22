@@ -25,9 +25,9 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
 
         userPoints = userPoints + subtractedPoints
         if(userPoints < 0){
-            spentPayerBalance.push({"payer": historyData.payer, "points": (historyData.points + userPoints) * -1})
-            historyData.points = userPoints * -1
-            break
+          spentPayerBalance.push({"payer": historyData.payer, "points": (historyData.points + userPoints) * -1})
+          historyData.points = userPoints * -1
+          break
         }
         if(!spentPayerBalance.some(a => a.payer === historyData.payer)){
           spentPayerBalance.push({"payer": historyData.payer, "points": subtractedPoints})
@@ -36,14 +36,14 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
           spentPayerBalance.filter(a => a.payer === historyData.payer)[0].points += subtractedPoints
         }
     }
-    payerBalances.forEach(obj => {
-      let match = spentPayerBalance.filter(a => a.payer === obj.payer)
-      match = match.length ? match[0]['points'] : 0
-      if(match){
-        obj.points = match + obj.points
-      } else if (obj.points < 0) {
-        obj.points = 0
-      }
+        payerBalances.forEach(obj => {
+          let match = spentPayerBalance.filter(a => a.payer === obj.payer)
+          match = match.length ? match[0]['points'] : 0
+          if(match){
+            obj.points = match + obj.points
+          } else if (obj.points < 0) {
+            obj.points = 0
+          }
     })
     return updatedHistoryData
 }
