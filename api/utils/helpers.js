@@ -17,8 +17,10 @@ const getPayerBalance = (data, payerBalances) => {
 }
 
 const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
+  let updatedHistoryData;
     for(let i = 0; i < data.length; i++){
         let historyData = data[i]
+        data.length === 1 ? updatedHistoryData = [] : updatedHistoryData = [...data].slice(i, data.length)
         let subtractedPoints = historyData.points * -1
 
         userPoints = userPoints + subtractedPoints
@@ -34,8 +36,13 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
           spentPayerBalance.filter(a => a.payer === historyData.payer)[0].points += subtractedPoints
         }
     }
-
-    payerBalances.forEach(obj => obj.points = spentPayerBalance.filter(a => a.payer === obj.payer)[0].points + obj.points)
+    payerBalances.forEach(obj => {
+      let match = spentPayerBalance.filter(a => a.payer === obj.payer)
+      match = match.length ? match[0]['points'] : 0
+      if(match)
+      obj.points = match + obj.points
+    })
+    return updatedHistoryData
 }
 
 const addTransaction = (data, history, payerBalances) => {
