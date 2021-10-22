@@ -3,6 +3,7 @@ const sortByDate = (data) => {
 }
 
 const getPayerBalance = (data, payerBalances) => {
+  if(data.length){
     data.forEach(obj => {
         if(!payerBalances.some(a => a.payer === obj.payer)){
           payerBalances.push({"payer": obj.payer, "points": obj.points})
@@ -10,6 +11,9 @@ const getPayerBalance = (data, payerBalances) => {
           payerBalances.filter(a => a.payer === obj.payer)[0].points += obj.points
         }
     })
+  } else {
+    payerBalances.filter(a => a.payer === data.payer)[0].points += data.points
+  }
 }
 
 const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
@@ -34,10 +38,35 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
     payerBalances.forEach(obj => obj.points = spentPayerBalance.filter(a => a.payer === obj.payer)[0].points + obj.points)
 }
 
+const addTransaction = (data, history, payerBalances) => {
+    if(data.length){
+      for(let i = 0; i < data.length; i++){
 
+        let newTransaction = {
+          payer: data[i].payer,
+          points: data[i].points,
+          timestamp: new Date()
+        }
+        history.push(newTransaction)
+        
+      }
+      getPayerBalance(data, payerBalances)
+    } else {
+      
+        let newTransaction = {
+          payer: data.payer,
+          points: data.points,
+          timestamp: new Date()
+        }
+        history.push(newTransaction)
+        getPayerBalance(data, payerBalances)
+    }
+    return sortByDate(history)
+}
 
 module.exports = {
     sortByDate,
     getPayerBalance,
-    spendingPoints
+    spendingPoints,
+    addTransaction
 }
