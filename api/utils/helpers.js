@@ -5,6 +5,7 @@ const sortByDate = (data) => {
 const getPayerBalance = (data, payerBalances) => {
   if(data.length){
     data.forEach(obj => {
+        if(obj.points < 0) obj.points = 0
         if(!payerBalances.some(a => a.payer === obj.payer)){
           payerBalances.push({"payer": obj.payer, "points": obj.points})
         } else {
@@ -12,6 +13,7 @@ const getPayerBalance = (data, payerBalances) => {
         }
     })
   } else {
+      if(data.points < 0) data.points = 0
       if(!payerBalances.some(a => a.payer === data.payer)){
         payerBalances.push({"payer": data.payer, "points": data.points})
       } else {
@@ -45,7 +47,8 @@ const spendingPoints = (data, userPoints, spentPayerBalance, payerBalances) => {
           match = match.length ? match[0]['points'] : 0
           if(match){
             obj.points = match + obj.points
-          } else if (obj.points < 0) {
+          } 
+          if(obj.points < 0) {
             obj.points = 0
           }
     })
