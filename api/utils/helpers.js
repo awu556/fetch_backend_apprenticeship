@@ -12,7 +12,11 @@ const getPayerBalance = (data, payerBalances) => {
         }
     })
   } else {
-    payerBalances.filter(a => a.payer === data.payer)[0].points += data.points
+      if(!payerBalances.some(a => a.payer === data.payer)){
+        payerBalances.push({"payer": data.payer, "points": data.points})
+      } else {
+        payerBalances.filter(a => a.payer === data.payer)[0].points += data.points
+      }
   }
 }
 
